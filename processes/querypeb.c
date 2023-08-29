@@ -7,7 +7,9 @@
 #include "../include/syscall.h"
 #include "../include/string.h"
 
+#ifndef NT_ERROR
 #define NT_ERROR(X) (!NT_SUCCESS(X))
+#endif
 
 PUNICODE_STRING ReadRemoteUnicodeString(HANDLE hProcess, PUNICODE_STRING remote_us)
 {
@@ -58,20 +60,58 @@ DWORD_PTR DumpRegionInfo(HANDLE hProcess, DWORD_PTR addr)
 	return info.RegionSize;
 }
 
+void usage(char *argv[]) {
+	printf("Usage: %s [-r] [-v] pid\n", argv[0]);
+	printf("    -r  Dump memory region info\n");
+	printf("    -v  Verbose mode, include hexdump\n");
+}
+
 int main(int argc, char *argv[])
 {
 	if(argc < 2) {
-		printf("Usage: %s pid\n", argv[0]);
+		usage(argv);
 		return 0;
 	}
 
+	int dump_regions = 0, verbose_dump = 0;
+	char *pid_str = NULL;
+
+	for (int i = 1; i < argc; i++) {
+		switch (argv[i][0]) {
+			case '-':
+				switch (argv[i][1]) {
+					case 'r':
+						dump_regions = 1;
+						break;
+					case 'v':
+						verbose_dump = 1;
+						break;
+					default:
+						printf("Unknown option: %s\n", argv[i]);
+						usage(argv);
+						return 1;
+				}
+				break;
+			case '0': case '1': case '2': case '3': case '4':
+			case '5': case '6': case '7': case '8': case '9':
+				// TODO: supports multiple PIDs
+				pid_str = argv[i];
+				break;
+		}
+	}
+
+	if (pid_str == NULL) {
+		printf("No pid was given\n");
+		usage(argv);
+		return 1;
+	}
+
 	NTSTATUS ret;
-	DWORD_PTR pid = strtol(argv[1], 0, 10);
+	DWORD_PTR pid = strtol(pid_str, 0, 10);
 	HANDLE hProcess = INVALID_HANDLE_VALUE;
-	OBJECT_ATTRIBUTES objAttr;
+	OBJECT_ATTRIBUTES objAttr = { 0 };
 	CLIENT_ID clientId = { .UniqueProcess = (HANDLE)pid, .UniqueThread = 0 };
 
-	memset(&objAttr, 0, sizeof(objAttr));
 	objAttr.Length = sizeof(objAttr);
 
 	ret = NtOpenProcess(&hProcess, PROCESS_QUERY_INFORMATION  | PROCESS_VM_READ, &objAttr, &clientId);
@@ -82,6 +122,10 @@ int main(int argc, char *argv[])
 
 	DWORD_PTR addr = 0;
 	do {
+		if (!dump_regions) {
+			break;
+		}
+
 		DWORD_PTR sz = DumpRegionInfo(hProcess, addr);
 		if(sz == (DWORD_PTR)-1) {
 			break;
@@ -147,6 +191,7 @@ int main(int argc, char *argv[])
 			return 1;
 		}
 
+		if (verbose_dump)
 		hexdump((LPCBYTE)&remoteLdrModule, sizeof(remoteLdrModule), (DWORD_PTR)remoteLdrModuleAddr);
 
 		printf("RemoteLdrModule[%d]->InMemoryOrderLinks.Flink = %p\n", dll_idx, remoteLdrModule.InMemoryOrderLinks.Flink);
