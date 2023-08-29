@@ -127,12 +127,12 @@ HANDLE inject_shellcode(HANDLE hProcess, LPCWSTR sc_file)
 	SIZE_T size = 0;
 	PBYTE remote_buff = NULL;
 	if(ReadFileToBuffer(sc_file, &buffer, &size) == FALSE) {
-		wprintf(L"[-] Can not read file %s\n", sc_file);
+		wprintf(L"[-] Can not read file %S\n", sc_file);
 		goto failed;
 	}
 
 	if(size == 0) {
-		wprintf(L"[-] File %s is empty\n", sc_file);
+		wprintf(L"[-] File %S is empty\n", sc_file);
 		goto failed;
 	}
 
@@ -218,9 +218,9 @@ void dump_args_config()
 	for(int i = 0; i < pid_count; i++)
 		wprintf(L"[*] Manually specific pid => %d\n", pid_list[i]);
 	for(int i = 0; i < sc_count; i++)
-		wprintf(L"[*] Shellcode file to be injected => %s\n", sc_files[i]);
+		wprintf(L"[*] Shellcode file to be injected => %S\n", sc_files[i]);
 	for(int i = 0; i < dll_count; i++)
-		wprintf(L"[*] DLL to be injected => %s\n", dll_files[i]);
+		wprintf(L"[*] DLL to be injected => %S\n", dll_files[i]);
 	for(int i = 0; i < module_unload_count; i++)
 		wprintf(L"[*] Module to be unload => %p\n", module_to_unload[i]);
 }
@@ -259,7 +259,7 @@ int wmain(int argc, wchar_t *argv[])
 	if(getenv("DEBUG")) DebugMode = 1;
 
 	if(argc < 3) {
-		wprintf(L"Usage: %s proc1.exe proc2.exe ... [options]\n", argv[0]);
+		wprintf(L"Usage: %S proc1.exe proc2.exe ... [options]\n", argv[0]);
 		wprintf(L"  -p pid\n");
 		wprintf(L"  -s shellcode.bin\n");
 		wprintf(L"  -d payload.dll\n");
@@ -306,9 +306,9 @@ skip_arg:
 	for(int i = 0; i < proc_count; i++) {
 		LPCWSTR name = proc_names[i];
 		DWORD ret = find_pid(name, pid_list + pid_count, ARR_LEN(pid_list) - pid_count);
-		wprintf(L"[*] Found %d processes named %s\n", ret, name);
+		wprintf(L"[*] Found %d processes named %S\n", ret, name);
 		for(DWORD i = 0; i < ret; i++) {
-			printf("[+] Found pid = %d\n", pid_list[pid_count + i]);
+			wprintf(L"[+] Found pid = %d\n", pid_list[pid_count + i]);
 		}
 		pid_count += ret;
 	}
@@ -333,7 +333,7 @@ skip_arg:
 				}
 				CloseHandle(hThread);
 			} else {
-				DBG(wprintf(L"[-] Shellcode %s inject to pid %d failed\n", sc_files[j], pid_list[i]));
+				DBG(wprintf(L"[-] Shellcode %S inject to pid %d failed\n", sc_files[j], pid_list[i]));
 			}
 		}
 		for(int j = 0; j < dll_count; j++) {
@@ -348,7 +348,7 @@ skip_arg:
 				}
 				CloseHandle(hThread);
 			} else {
-				DBG(wprintf(L"[-] Dll %s inject to pid %d failed\n", dll_files[j], pid_list[i]));
+				DBG(wprintf(L"[-] Dll %S inject to pid %d failed\n", dll_files[j], pid_list[i]));
 			}
 		}
 		for(int j = 0; j < module_unload_count; j++) {

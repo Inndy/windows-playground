@@ -53,7 +53,7 @@ void check_pid(DWORD pid)
 	WCHAR path[MAX_PATH];
 	if(GetModuleFileNameExW(hProcess, NULL, path, MAX_PATH) == 0) goto failed;
 
-	wprintf(L" 0x%.4x (%-5d) | %-9s | %s\n", pid, pid, integrity_level, path);
+	printf(" 0x%.4x (%-5d) | %-9S | %S\n", pid, pid, integrity_level, path);
 
 failed:
 	CloseHandle(hProcess);

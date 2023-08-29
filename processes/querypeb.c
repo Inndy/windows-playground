@@ -142,7 +142,7 @@ int main(int argc, char *argv[])
 	}
 
 	PUNICODE_STRING filename = (PUNICODE_STRING)buffer;
-	printf("Outlen: %d, Filename: %ws\n", outlen, filename->Buffer);
+	printf("Outlen: %d, Filename: %S\n", outlen, filename->Buffer);
 
 	PROCESS_BASIC_INFORMATION basicInfo;
 	ret = NtQueryInformationProcess(hProcess, ProcessBasicInformation, &basicInfo, sizeof(basicInfo), &outlen);
@@ -198,8 +198,8 @@ int main(int argc, char *argv[])
 		printf("RemoteLdrModule[%d]->DllBase = %p\n", dll_idx, remoteLdrModule.DllBase);
 		printf("RemoteLdrModule[%d]->EntryPoint = %p\n", dll_idx, remoteLdrModule.EntryPoint);
 		printf("RemoteLdrModule[%d]->SizeOfImage = %p\n", dll_idx, (DWORD_PTR)remoteLdrModule.SizeOfImage);
-		printf("RemoteLdrModule[%d]->FullDllName = %ws\n", dll_idx, ReadRemoteUnicodeString(hProcess, &remoteLdrModule.FullDllName)->Buffer);
-		printf("RemoteLdrModule[%d]->BaseDllName = %ws\n", dll_idx, ReadRemoteUnicodeString(hProcess, &remoteLdrModule.BaseDllName)->Buffer);
+		printf("RemoteLdrModule[%d]->FullDllName = %S\n", dll_idx, ReadRemoteUnicodeString(hProcess, &remoteLdrModule.FullDllName)->Buffer);
+		printf("RemoteLdrModule[%d]->BaseDllName = %S\n", dll_idx, ReadRemoteUnicodeString(hProcess, &remoteLdrModule.BaseDllName)->Buffer);
 		printf("RemoteLdrModule[%d]->LoadCount = %d\n", dll_idx, remoteLdrModule.LoadCount);
 		dll_idx++;
 	} while(remoteLdrModule.InMemoryOrderLinks.Flink != remoteLdrData.InMemoryOrderModuleList.Flink);
@@ -211,10 +211,10 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	printf("RemoteUserProcessParameters->CurrentDirectory.DosPath = %ws\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.CurrentDirectory.DosPath)->Buffer);
-	printf("RemoteUserProcessParameters->DllPath = %ws\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.DllPath)->Buffer);
-	printf("RemoteUserProcessParameters->ImagePathName = %ws\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.ImagePathName)->Buffer);
-	printf("RemoteUserProcessParameters->CommandLine = %ws\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.CommandLine)->Buffer);
+	printf("RemoteUserProcessParameters->CurrentDirectory.DosPath = %S\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.CurrentDirectory.DosPath)->Buffer);
+	printf("RemoteUserProcessParameters->DllPath = %S\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.DllPath)->Buffer);
+	printf("RemoteUserProcessParameters->ImagePathName = %S\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.ImagePathName)->Buffer);
+	printf("RemoteUserProcessParameters->CommandLine = %S\n", ReadRemoteUnicodeString(hProcess, &remoteUserProcessParameters.CommandLine)->Buffer);
 
 	ret = NtClose(hProcess);
 	if(NT_ERROR(ret)) {

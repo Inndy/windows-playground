@@ -24,7 +24,7 @@ int main()
 	printf("RtlOsVersionInfo->dwMinorVersion = %d\n", ovi.dwMinorVersion);
 	printf("RtlOsVersionInfo->dwBuildNumber = %d\n", ovi.dwBuildNumber);
 	printf("RtlOsVersionInfo->dwPlatformId = %d\n", ovi.dwPlatformId);
-	printf("RtlOsVersionInfo->szCSDVersion = %ws\n", ovi.szCSDVersion);
+	printf("RtlOsVersionInfo->szCSDVersion = %S\n", ovi.szCSDVersion);
 	printf("RtlOsVersionInfo->wServicePackMajor = %d\n", ovi.wServicePackMajor);
 	printf("RtlOsVersionInfo->wServicePackMinor = %d\n", ovi.wServicePackMinor);
 	printf("RtlOsVersionInfo->wSuiteMask = %d\n", ovi.wSuiteMask);
@@ -36,7 +36,7 @@ int main()
 	printf("OsVersionInfoExW->dwMinorVersion = %d\n", ovi.dwMinorVersion);
 	printf("OsVersionInfoExW->dwBuildNumber = %d\n", ovi.dwBuildNumber);
 	printf("OsVersionInfoExW->dwPlatformId = %d\n", ovi.dwPlatformId);
-	printf("OsVersionInfoExW->szCSDVersion = %ws\n", ovi.szCSDVersion);
+	printf("OsVersionInfoExW->szCSDVersion = %S\n", ovi.szCSDVersion);
 	printf("OsVersionInfoExW->wServicePackMajor = %d\n", ovi.wServicePackMajor);
 	printf("OsVersionInfoExW->wServicePackMinor = %d\n", ovi.wServicePackMinor);
 	printf("OsVersionInfoExW->wSuiteMask = %d\n", ovi.wSuiteMask);
@@ -56,6 +56,6 @@ int main()
 	printf("KUSER_SHARED_DATA->NtProductType = %d\n", share_data->NtProductType);
 	printf("KUSER_SHARED_DATA->ProductTypeIsValid = %d\n", share_data->ProductTypeIsValid);
 
-	printf("KUSER_SHARED_DATA->NtSystemRoot = %ws\n", share_data->NtSystemRoot);
+	printf("KUSER_SHARED_DATA->NtSystemRoot = %S\n", share_data->NtSystemRoot);
 	printf("KUSER_SHARED_DATA->TimeZoneId = %d\n", share_data->TimeZoneId);
 }
