@@ -1,4 +1,7 @@
 #if _WIN64 || _Win64
+
+#ifdef USE_DIRECT_SYSCALL
+// TODO: check windows verion
 #define DefineSyscall(Name, Index) \
 asm( \
 #Name ":" \
@@ -13,6 +16,7 @@ DefineSyscall(NtOpenProcess,             0x26);
 DefineSyscall(NtReadVirtualMemory,       0x3f);
 DefineSyscall(NtWriteVirtualMemory,      0x3a);
 DefineSyscall(NtQueryInformationProcess, 0x19);
+#endif
 
 #ifdef NTSYSCALLAPI
 #undef NTSYSCALLAPI
