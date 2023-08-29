@@ -554,8 +554,8 @@ typedef struct _KUSER_SHARED_DATA {
   volatile ULONG ActiveProcessorCount;
   volatile USHORT ActiveGroupCount;
   USHORT Reserved4;
-  volatile ULONG AitSamplingValue;
-  volatile ULONG AppCompatFlag;
+  volatile ULONG AitSamplingValue2;
+  volatile ULONG AppCompatFlag2;
   ULONGLONG SystemDllNativeRelocation;
   ULONG SystemDllWowRelocation;
   ULONG XStatePad[1];
